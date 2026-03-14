@@ -1,11 +1,36 @@
 const express = require("express");
+const { Pool } = require("pg");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(express.json());
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Zayed backend is running");
 });
+
+app.get("/test-db", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW()");
+    res.json({
+      status: "Database connected",
+      time: result.rows[0]
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: "Database connection failed",
+      details: err.message
+    });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);

@@ -5,10 +5,7 @@ const app = express();
 app.use(express.json());
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  connectionString: process.env.DATABASE_URL
 });
 
 app.get("/", (req, res) => {
@@ -24,14 +21,12 @@ app.get("/test-db", async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
-      error: "Database connection failed",
-      details: err.message
+      error: err.message
     });
   }
 });
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });

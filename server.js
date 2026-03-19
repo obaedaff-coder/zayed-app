@@ -30,8 +30,6 @@ app.get("/test-db", async (req, res) => {
   }
 });
 // تشغيل السير});
-
-app.get('/test-register', async (req, res) => {
   try {
     const result = await pool.query(
       'INSERT INTO users (name, phone) VALUES ($1, $2) RETURNING *',
@@ -45,7 +43,32 @@ app.get('/test-register', async (req, res) => {
     res.json({ error: err.message });
   }
 });
+app.post('/users/register', async (req, res) => {
+  try {
+    const { name, phone } = req.body;
 
+    if (!name || !phone) {
+      return res.status(400).json({ error: 'Name and phone are required' });
+    }
+
+    const result = await pool.query(
+      'INSERT INTO users (name, phone) VALUES ($1, $2) RETURNING *',
+      [name, phone]
+    );
+
+    res.json({
+      success: true,
+      user: result.rows[0]
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
 // تشغيل السيرفر
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

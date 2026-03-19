@@ -47,7 +47,6 @@ app.get('/test-register', async (req, res) => {
 });
 
 // تشغيل السيرفر
-const PORT = process.env.PORT || 8080;فر
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);

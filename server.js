@@ -29,8 +29,25 @@ app.get("/test-db", async (req, res) => {
     });
   }
 });
+// تشغيل السير});
+
+app.get('/test-register', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'INSERT INTO users (name, phone) VALUES ($1, $2) RETURNING *',
+      ['test', '0790000000']
+    );
+
+    res.json({ message: 'User created', user: result.rows[0] });
+
+  } catch (err) {
+    console.error(err);
+    res.json({ error: err.message });
+  }
+});
 
 // تشغيل السيرفر
+const PORT = process.env.PORT || 8080;فر
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
